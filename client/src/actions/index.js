@@ -1,11 +1,11 @@
 import AuthService from "../AuthService";
-import { navigate } from "@reach/router"
+import {navigate} from "@reach/router"
 
 const API_URL = process.env.REACT_APP_API_URL;
 const Auth = new AuthService(`${API_URL}/users/authenticate`);
 
 /******************************************************
-  Actions for Notifications
+ Actions for Notifications
  ******************************************************/
 export const showAlert = (title, text, level) => ({
     type: 'SHOW_ALERT',
@@ -26,7 +26,7 @@ export const hideAlert = (title, text) => ({
 
 
 /******************************************************
-  Actions for User credentials and Login / logout
+ Actions for User credentials and Login / logout
  ******************************************************/
 export const addUserCredentials = (username) => ({
     type: 'ADD_USER_CRED',
@@ -39,10 +39,14 @@ export const removeUserCredentials = (username) => ({
 
 export const login = (username, password) => async function (dispatch) {
     try {
-        await Auth.login(username, password);
-        dispatch(addUserCredentials(username));
-        navigate("/"); // Front page
-    } catch(e) {
+        const loggedIn = await Auth.login(username, password);
+        if (loggedIn.msg === "Username or password missing!" || loggedIn.msg === "Password mismatch!" || loggedIn.msg === "User not found!") {
+            dispatch(showAndHideAlert("Login Failed", loggedIn.msg, "error"));
+        } else {
+            dispatch(addUserCredentials(username));
+            navigate("/"); // Front page
+        }
+    } catch (e) {
         dispatch(showAndHideAlert("Login Failed", e.message, "error"));
     }
 };
@@ -54,7 +58,7 @@ export const logout = _ => async function (dispatch) {
 
 
 /******************************************************
-  Actions for handling questions and answers.
+ Actions for handling questions and answers.
  ******************************************************/
 export const replaceQuestions = questions => ({
     type: 'ADD_QUESTIONS',
@@ -73,10 +77,10 @@ export const loadQuestions = _ => async function (dispatch) {
     }
 };
 
-export const postQuestion = text => async function(dispatch) {
+export const postQuestion = text => async function (dispatch) {
     if (text === "") return;
     try {
-        const newQuestion = { text: text };
+        const newQuestion = {text: text};
         const response = await Auth.fetch(`${API_URL}/questions`, {
             method: "POST",
             body: JSON.stringify(newQuestion)
@@ -93,7 +97,7 @@ export const postQuestion = text => async function(dispatch) {
     }
 };
 
-export const postAnswer = (id, text) => async function(dispatch) {
+export const postAnswer = (id, text) => async function (dispatch) {
     if (text === "") return;
     try {
         const response = await Auth.fetch(`${API_URL}/questions/${id}/answers`, {
@@ -114,7 +118,7 @@ export const postAnswer = (id, text) => async function(dispatch) {
     }
 };
 
-export const voteAnswerUp = (questionId, answerId) => async function(dispatch) {
+export const voteAnswerUp = (questionId, answerId) => async function (dispatch) {
     try {
         const response = await Auth.fetch(`${API_URL}/questions/${questionId}/answers/${answerId}/vote`, {
             method: "PUT",

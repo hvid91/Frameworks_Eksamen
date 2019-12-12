@@ -95,7 +95,7 @@ class App extends Component {
                     <div className="container">
                         <div className="content has-text-centered">
                             <p>
-                                <strong>QA Site</strong> by Kristian
+                                <strong>Site</strong> by Michael
                             </p>
                         </div>
                     </div>
