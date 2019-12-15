@@ -58,7 +58,7 @@ mongoose.connect(MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true})
         io.of("/my_app").on("connection", function (socket) {
            socket.on("disconnect", () => {
                console.log("Someone disconnected...");
-           })
+           });
         });
 
         /**** Routes ****/

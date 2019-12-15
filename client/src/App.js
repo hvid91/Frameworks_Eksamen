@@ -19,7 +19,7 @@ class App extends Component {
         };
     }
 
-    SOCKET_URL = "http://localhost:8080/my_app";
+    SOCKET_URL = "https://frameworks-eksamen-2019.herokuapp.com/my_app" || "http://localhost:8080/my_app";
 
     componentDidMount() {
         this.props.loadQuestions();
@@ -29,7 +29,7 @@ class App extends Component {
         socket.on("new-data", (data) => {
             console.log(`server msg: ${data.msg}`);
             this.props.loadQuestions();
-        })
+        });
     }
 
     resetAlert() {
