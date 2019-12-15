@@ -9,7 +9,8 @@ import Login from "./Login";
 import Alert from "./Alert";
 import UserHeader from "./UserHeader";
 
-import { login, logout, loadQuestions, postQuestion, postAnswer, voteAnswerUp, hideAlert } from './actions';
+import { login, logout, loadQuestions, postQuestion, postAnswer, voteAnswerUp, hideAlert, creatUser } from './actions';
+import CreatUser from "./CreatUser";
 
 class App extends Component {
     constructor(props) {
@@ -72,6 +73,7 @@ class App extends Component {
                             <h2 className="subtitle">
                                 Get help here!
                             </h2>
+                            <Link to="/users/create"><h3 className={"subtitle"}>Create User</h3></Link>
                         </div>
                     </div>
                 </section>
@@ -85,6 +87,10 @@ class App extends Component {
                         <Questions path="/"
                             questions={this.props.questions}
                             onAskQuestion={(text) => this.props.postQuestion(text)}
+                        />
+
+                        <CreatUser path="/users/create"
+                            creatUser={(username, password) => this.props.creatUser(username, password)}
                         />
 
                         <Question path="/question/:id"
@@ -127,6 +133,7 @@ const mapDispatchToProps = dispatch => ({
     postAnswer: (id, text) => dispatch(postAnswer(id, text)),
     login: (username, password) => dispatch(login(username, password)),
     logout: _ => dispatch(logout()),
+    creatUser: (username, password) => dispatch(creatUser(username, password)),
     voteAnswerUp: (questionId, answerId) => dispatch(voteAnswerUp(questionId, answerId)),
     hideAlert: _ => dispatch(hideAlert())
 });

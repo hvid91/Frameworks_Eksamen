@@ -26,7 +26,7 @@ export const hideAlert = (title, text) => ({
 
 
 /******************************************************
- Actions for User credentials and Login / logout
+ Actions for User credentials and Login / logout / Creat
  ******************************************************/
 export const addUserCredentials = (username) => ({
     type: 'ADD_USER_CRED',
@@ -56,6 +56,25 @@ export const logout = _ => async function (dispatch) {
     dispatch(removeUserCredentials());
 };
 
+export const creatUser = (username, password) => async function (dispatch) {
+    const url = `${API_URL}/users/create`;
+    const response = await Auth.fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({
+            username,
+            password
+        })
+    });
+    const data = await response.json();
+
+    if (data.msg === "Username or password missing!") {
+        dispatch(showAndHideAlert("User not created", data.msg, "error"));
+    } else {
+        dispatch(showAndHideAlert("User created", data.msg, "alert"));
+        navigate("/"); // Front page
+    }
+
+};
 
 /******************************************************
  Actions for handling questions and answers.
