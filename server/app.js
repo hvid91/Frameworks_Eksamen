@@ -21,18 +21,18 @@ let openPaths = [
     /^(?!\/api).*/gim, // Open everything that doesn't begin with '/api'
     '/api/users/authenticate',
     '/api/users/create',
-    { url: '/api/questions', methods: ['GET']  }  // Open GET questions, but not POST.
+    {url: '/api/questions', methods: ['GET']}  // Open GET questions, but not POST.
 ];
 
 // Validate the user using authentication. checkJwt checks for auth token.
 const secret = process.env.SECRET || "the cake is a lie";
 if (!process.env.SECRET) console.error("Warning: SECRET is undefined.");
-app.use(checkJwt({ secret: secret }).unless({ path : openPaths }));
+app.use(checkJwt({secret: secret}).unless({path: openPaths}));
 
 // This middleware checks the result of checkJwt
 app.use((err, req, res, next) => {
     if (err.name === 'UnauthorizedError') { // If the user didn't authorize correctly
-        res.status(401).json({ error: err.message }); // Return 401 with error message.
+        res.status(401).json({error: err.message}); // Return 401 with error message.
     } else {
         next(); // If no errors, send request to next middleware or route handler
     }
@@ -49,11 +49,23 @@ mongoose.connect(MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true})
         await questionDAL.bootstrap();
         await userDAL.bootstrapTestusers();
 
+        // When DB connection is ready, let's open the API
+        const server = await app.listen(PORT);
+        console.log(`QA API running on port ${PORT}!`);
+
+        const io = require("socket.io").listen(server);
+
+        io.of("/my_app").on("connection", function (socket) {
+           socket.on("disconnect", () => {
+               console.log("Someone disconnected...");
+           })
+        });
+
         /**** Routes ****/
         const usersRouter = require('./routers/user_router')(userDAL, secret);
         app.use('/api/users', usersRouter);
 
-        const questionRouter = require('./routers/question_router')(questionDAL);
+        const questionRouter = require('./routers/question_router')(questionDAL, io);
         app.use('/api/questions', questionRouter);
 
         // "Redirect" all get requests (except for the routes specified above) to React's entry point (index.html)
@@ -61,9 +73,7 @@ mongoose.connect(MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true})
         app.get('*', (req, res) =>
             res.sendFile(path.resolve('..', 'client', 'build', 'index.html'))
         );
-
-        // When DB connection is ready, let's open the API
-        await app.listen(PORT);
-        console.log(`QA API running on port ${PORT}!`)
     })
-    .catch(error => { console.error(error) });
+    .catch(error => {
+        console.error(error)
+    });

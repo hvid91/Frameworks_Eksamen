@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Link, Router} from "@reach/router";
 import {connect} from "react-redux";
+import io from 'socket.io-client';
 
 import Questions from "./Questions";
 import Question from "./Question";
@@ -18,8 +19,17 @@ class App extends Component {
         };
     }
 
+    SOCKET_URL = "http://localhost:8080/my_app";
+
     componentDidMount() {
         this.props.loadQuestions();
+
+        const socket = io(this.SOCKET_URL);
+
+        socket.on("new-data", (data) => {
+            console.log(`server msg: ${data.msg}`);
+            this.props.loadQuestions();
+        })
     }
 
     resetAlert() {

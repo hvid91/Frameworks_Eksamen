@@ -1,4 +1,4 @@
-module.exports = (dal) => {
+module.exports = (dal, io) => {
     let express = require('express');
     let router = express.Router();
 
@@ -17,6 +17,10 @@ module.exports = (dal) => {
             answers : []
         };
         dal.createQuestion(newQuestion).then(newQuestion => res.json(newQuestion));
+
+        io.of("/my_app").emit("new-data", {
+            msg: "New data is available"
+        });
     });
 
     router.post('/:id/answers', (req, res) => {
