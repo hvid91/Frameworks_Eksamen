@@ -3,14 +3,15 @@ import {Link, Router} from "@reach/router";
 import {connect} from "react-redux";
 import io from 'socket.io-client';
 
-import Questions from "./Questions";
-import Question from "./Question";
+import Categories from "./Categories";
+import Books from "./Books";
 import Login from "./Login";
 import Alert from "./Alert";
 import UserHeader from "./UserHeader";
 
-import { login, logout, loadCategories, postQuestion, postAnswer, voteAnswerUp, hideAlert, creatUser } from './actions';
+import {login, logout, loadCategories, postQuestion, postAnswer, voteAnswerUp, hideAlert, creatUser} from './actions';
 import CreatUser from "./CreatUser";
+import Book from "./Book";
 
 class App extends Component {
     constructor(props) {
@@ -50,7 +51,7 @@ class App extends Component {
             notification = <section className={`hero ${level} is-small`}>
                 <div className="hero-body">
                     <div className="container">
-                        <button onClick={() => this.props.hideAlert()} className="delete is-large is-pulled-right" />
+                        <button onClick={() => this.props.hideAlert()} className="delete is-large is-pulled-right"/>
                         <h1 className="title">
                             {notif.title}
                         </h1>
@@ -84,24 +85,25 @@ class App extends Component {
                     <Alert msg={this.state.alertMsg}/>
 
                     <Router>
-                        <Questions path="/"
-                            questions={this.props.categories}
-                            onAskQuestion={(text) => this.props.postQuestion(text)}
+                        <Categories path="/"
+                                   categories={this.props.categories}
                         />
 
                         <CreatUser path="/users/create"
-                            creatUser={(username, password) => this.props.creatUser(username, password)}
+                                   creatUser={(username, password) => this.props.creatUser(username, password)}
                         />
 
-                        <Question path="/question/:id"
-                            getQuestion={(id) => this.props.questions.find(e => e._id === id)}
-                            handleVote={(id, aid) => this.props.voteAnswerUp(id, aid)}
-                            onPostAnswer={(id, text) => this.props.postAnswer(id, text)}
+                        <Books path="/category/:category"
+                               getCategories={(category) => this.props.categories.find(e => e.category === category)}
+                        />
+
+                        <Book path="/books/:_id"
+
                         />
 
                         <Login path="/login"
-                            login={(username, password) => this.props.login(username, password)}
-                            infoMsg={this.state.infoMsg}
+                               login={(username, password) => this.props.login(username, password)}
+                               infoMsg={this.state.infoMsg}
                         />
                     </Router>
 
@@ -122,7 +124,7 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
-    questions: state.questions,
+    categories: state.categories,
     user: state.user,
     notifications: state.notifications
 });
