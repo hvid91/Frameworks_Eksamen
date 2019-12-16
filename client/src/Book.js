@@ -5,31 +5,32 @@ import {Link} from "@reach/router";
 export default class Book extends Component {
 
     render() {
-        const category = this.props.getCategories(this.props.category);
-        let categoryContent = <p>loading...</p>;
+        const bookData = this.props.getBook(this.props._id);
+        console.log(bookData);
+        let bookContent = <p>loading...</p>;
 
-        if (category) {
-            categoryContent = category.books ?
-                category.books.map(
-                    book =>
-                        <li key={book._id}>
-                            <Link className="list-item" to={"/books/" + book._id}>
-                                {<div key={book._id} className="columns">
-                                    <div className="column">{book.title}</div>
-                                </div>}</Link>
-                        </li>
-                ) : [];
+        if (bookData) {
+            bookContent =
+                <li key={bookData._id}>
+                    {<div key={bookData._id}>
+                        <div>{"Title: " + bookData.title}</div>
+                        <div>{"Author: " + bookData.author}</div>
+                        <div>{"Price : " + bookData.price + "kr"}</div>
+                        <div>{"Seller name: " + bookData.sellerName}</div>
+                        <div>{"Seller email: " + bookData.sellerEmail}</div>
+                    </div>}
+                </li>
         }
 
         return (
             <>
                 <div className="container">
                     <section className="section">
-                        {category ? <h2 className="title is-4">{category.category}</h2> : <p>"loading text..."</p>}
+                        {bookData ? <h2 className="title is-4">{bookData.category}</h2> : <p>"loading text..."</p>}
                     </section>
                     <section className="section has-background-white-bis">
                         <ul>
-                            {categoryContent}
+                            {bookContent}
                         </ul>
                     </section>
                 </div>

@@ -97,7 +97,7 @@ class CategoryDAL {
                 books: [{
                     title: "This is how you make virtual reality",
                     author: "Jens",
-                    category: "Graphical Design",
+                    category: "Virtual Reality",
                     price: 500,
                     sellerName: "Karsten",
                     sellerEmail: "karsten@gmail.com"

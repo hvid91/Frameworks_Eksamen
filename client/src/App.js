@@ -12,6 +12,7 @@ import UserHeader from "./UserHeader";
 import {login, logout, loadCategories, postQuestion, postAnswer, voteAnswerUp, hideAlert, creatUser} from './actions';
 import CreatUser from "./CreatUser";
 import Book from "./Book";
+import SellBook from "./SellBook";
 
 class App extends Component {
     constructor(props) {
@@ -75,6 +76,7 @@ class App extends Component {
                                 Pick a category and find books!
                             </h2>
                             <Link to="/users/create"><h3 className={"subtitle"}>Create User</h3></Link>
+                            <Link to="/books/sell"><h3 className={"subtitle"}>Sell books</h3></Link>
                         </div>
                     </div>
                 </section>
@@ -86,7 +88,7 @@ class App extends Component {
 
                     <Router>
                         <Categories path="/"
-                                   categories={this.props.categories}
+                                    categories={this.props.categories}
                         />
 
                         <CreatUser path="/users/create"
@@ -98,6 +100,10 @@ class App extends Component {
                         />
 
                         <Book path="/books/:_id"
+                              getBook={(_id) => this.props.categories.map(d => d.books.find(e => e._id === _id)).filter(c => c !== undefined)[0]}
+                        />
+
+                        <SellBook path="/books/sell"
 
                         />
 
