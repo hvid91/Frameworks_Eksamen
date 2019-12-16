@@ -26,17 +26,26 @@ module.exports = (dal, io) => {
         });
     });
 
+    router.get("/hej", (req, res) => {
+        dal.getCategory("5df75b27ec61de044456d46f").then(category => res.json(category));
+    });
+
     router.post('/:id/books', (req, res) => {
         const newBook = {
             title: req.body.title,
             author: req.body.author,
-            category: req.body.category,
             price: req.body.price,
             sellerName: req.body.sellerName,
             sellerEmail: req.body.sellerEmail
         };
 
-        dal.addBook(req.params.id, newBook).then(newBook => res.json(newBook));
+        dal.getCategory(req.param.id).then(data => {
+            console.log(data.category);
+            newBook.category = data.category;
+            dal.addBook(req.params.id, newBook).then(newBook => res.json(newBook));
+        });
+
+
     });
 
     return router;

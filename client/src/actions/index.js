@@ -24,7 +24,6 @@ export const hideAlert = (title, text) => ({
     type: 'HIDE_ALERT',
 });
 
-
 /******************************************************
  Actions for User credentials and Login / logout / Creat
  ******************************************************/
@@ -76,7 +75,7 @@ export const creatUser = (username, password) => async function (dispatch) {
 };
 
 /******************************************************
- Actions for handling questions and answers.
+ Actions for handling categories and books.
  ******************************************************/
 export const replaceCategories = categories => ({
     type: 'UPDATE_CATEGORIES',
@@ -95,13 +94,20 @@ export const loadCategories = _ => async function (dispatch) {
     }
 };
 
-export const postQuestion = text => async function (dispatch) {
-    if (text === "") return;
+export const postBook = (title, author, categoryID, price, sellerName, sellerEmail) => async function (dispatch) {
+    // if (text === "") return;
     try {
-        const newQuestion = {text: text};
-        const response = await Auth.fetch(`${API_URL}/questions`, {
+        const newBook = {
+            title: title,
+            author: author,
+            price: price,
+            sellerName: sellerName,
+            sellerEmail: sellerEmail
+        };
+
+        const response = await Auth.fetch(`${API_URL}/categories/${categoryID}/books`, {
             method: "POST",
-            body: JSON.stringify(newQuestion)
+            body: JSON.stringify(newBook)
         });
         if (response.status === 401) {
             dispatch(showAndHideAlert("Login", "You need to login to post questions!", "alert"));

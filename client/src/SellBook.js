@@ -8,7 +8,7 @@ export default class SellBook extends Component {
         this.state = {
             title: "",
             author: "",
-            category: "",
+            categoryID: "",
             price: 0,
             sellerName: "",
             sellerEmail: ""
@@ -18,7 +18,7 @@ export default class SellBook extends Component {
 
     handleInput(event) {
         event.preventDefault();
-        // this.props.creatUser(this.state.username, this.state.password);
+        this.props.postBook(this.state.title, this.state.author, this.state.categoryID, this.state.price, this.state.sellerName, this.state.sellerEmail);
     }
 
     onChange(event) {
@@ -28,7 +28,6 @@ export default class SellBook extends Component {
     }
 
     render() {
-        console.log(this.props.categories);
         return (
             <form>
                 <div className="field">
@@ -38,12 +37,11 @@ export default class SellBook extends Component {
                     <input onChange={event => this.onChange(event)} name="author"/>
                     <label className="label" htmlFor="QuestionInput">The category</label>
                     <select onChange={event => this.onChange(event)}
-                            name="category" defaultValue={{category: this.props.categories[0]}}>
-                        {this.props.categories.map((c, index) =>
-                        <option key={index} value={c.category}>{c.category}</option>)}
+                            name="categoryID">{this.props.categories.map((c, index) =>
+                        <option key={index} value={c._id}>{c.category}</option>)}
                     </select>
                     <label className="label" htmlFor="QuestionInput">The price</label>
-                    <input onChange={event => this.onChange(event)} name="price"/>
+                    <input onChange={event => this.onChange(event)} type="number" name="price"/>
                     <label className="label" htmlFor="QuestionInput">Your name</label>
                     <input onChange={event => this.onChange(event)} name="sellerName"/>
                     <label className="label" htmlFor="QuestionInput">Your email</label>

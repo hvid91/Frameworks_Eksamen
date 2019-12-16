@@ -9,7 +9,7 @@ import Login from "./Login";
 import Alert from "./Alert";
 import UserHeader from "./UserHeader";
 
-import {login, logout, loadCategories, postQuestion, postAnswer, voteAnswerUp, hideAlert, creatUser} from './actions';
+import {login, logout, loadCategories, postBook, postAnswer, voteAnswerUp, hideAlert, creatUser} from './actions';
 import CreatUser from "./CreatUser";
 import Book from "./Book";
 import SellBook from "./SellBook";
@@ -113,6 +113,7 @@ class App extends Component {
 
                         <SellBook path="/books/sell"
                                   categories={this.props.categories}
+                                  postBook={(title, author, categoryID, price, sellerName, sellerEmail) => this.props.postBook(title, author, categoryID, price, sellerName, sellerEmail)}
                         />
 
                         <Login path="/login"
@@ -145,7 +146,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     loadCategories: _ => dispatch(loadCategories()),
-    postQuestion: text => dispatch(postQuestion(text)),
+    postBook: (title, author, categoryID, price, sellerName, sellerEmail) => dispatch(postBook(title, author, categoryID, price, sellerName, sellerEmail)),
     postAnswer: (id, text) => dispatch(postAnswer(id, text)),
     login: (username, password) => dispatch(login(username, password)),
     logout: _ => dispatch(logout()),
