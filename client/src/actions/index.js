@@ -79,17 +79,17 @@ export const creatUser = (username, password) => async function (dispatch) {
 /******************************************************
  Actions for handling questions and answers.
  ******************************************************/
-export const replaceQuestions = questions => ({
-    type: 'ADD_QUESTIONS',
-    questions: questions
+export const replaceCategories = categories => ({
+    type: 'UPDATE_CATEGORIES',
+    categories: categories
 });
 
-export const loadQuestions = _ => async function (dispatch) {
+export const loadCategories = _ => async function (dispatch) {
     try {
-        const url = `${API_URL}/questions`;
+        const url = `${API_URL}/categories`;
         const response = await Auth.fetch(url);
         const data = await response.json();
-        dispatch(replaceQuestions(data));
+        dispatch(replaceCategories(data));
     } catch (e) {
         console.error(e);
         dispatch(showAndHideAlert("Error loading questions", e.message, "error"));
@@ -108,7 +108,7 @@ export const postQuestion = text => async function (dispatch) {
             dispatch(showAndHideAlert("Login", "You need to login to post questions!", "alert"));
         } else {
             await response.json();
-            dispatch(loadQuestions());
+            dispatch(loadCategories());
         }
     } catch (e) {
         dispatch(showAndHideAlert("Send question error", e.message, "error"));
@@ -129,7 +129,7 @@ export const postAnswer = (id, text) => async function (dispatch) {
             await navigate("/login");
         } else {
             await response.json();
-            dispatch(loadQuestions());
+            dispatch(loadCategories());
         }
     } catch (e) {
         dispatch(showAndHideAlert("Give answer error", e.message, "error"));
@@ -148,7 +148,7 @@ export const voteAnswerUp = (questionId, answerId) => async function (dispatch) 
             await navigate("/login");
         }
         await response.json();
-        dispatch(loadQuestions());
+        dispatch(loadCategories());
     } catch (e) {
         dispatch(showAndHideAlert("Vote error", e.message, "error"));
         console.error(e);

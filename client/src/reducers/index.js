@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 
-function questions(state = [], action) {
+function categories(state = [], action) {
     switch (action.type) {
-        case 'ADD_QUESTIONS': {
-            return [...action.questions];
+        case 'UPDATE_CATEGORIES': {
+            return [...action.categories];
         }
         default:
             return state
@@ -45,5 +45,5 @@ function notifications(state = {}, action) {
 
 
 export default combineReducers({
-    questions, user, notifications
+    categories, user, notifications
 })

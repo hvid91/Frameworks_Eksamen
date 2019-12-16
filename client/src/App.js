@@ -9,7 +9,7 @@ import Login from "./Login";
 import Alert from "./Alert";
 import UserHeader from "./UserHeader";
 
-import { login, logout, loadQuestions, postQuestion, postAnswer, voteAnswerUp, hideAlert, creatUser } from './actions';
+import { login, logout, loadCategories, postQuestion, postAnswer, voteAnswerUp, hideAlert, creatUser } from './actions';
 import CreatUser from "./CreatUser";
 
 class App extends Component {
@@ -23,13 +23,13 @@ class App extends Component {
     SOCKET_URL = "https://frameworks-eksamen-2019.herokuapp.com/my_app";
 
     componentDidMount() {
-        this.props.loadQuestions();
+        this.props.loadCategories();
 
         const socket = io(this.SOCKET_URL);
 
         socket.on("new-data", (data) => {
             console.log(`server msg: ${data.msg}`);
-            this.props.loadQuestions();
+            this.props.loadCategories();
         });
     }
 
@@ -69,9 +69,9 @@ class App extends Component {
                 <section className="hero is-primary">
                     <div className="hero-body">
                         <div className="container">
-                            <Link to="/"><h1 className="title is-2">Questions and Answers</h1></Link>
+                            <Link to="/"><h1 className="title is-2">Marketplace for books</h1></Link>
                             <h2 className="subtitle">
-                                Get help here!
+                                Pick a category and find books!
                             </h2>
                             <Link to="/users/create"><h3 className={"subtitle"}>Create User</h3></Link>
                         </div>
@@ -85,7 +85,7 @@ class App extends Component {
 
                     <Router>
                         <Questions path="/"
-                            questions={this.props.questions}
+                            questions={this.props.categories}
                             onAskQuestion={(text) => this.props.postQuestion(text)}
                         />
 
@@ -128,7 +128,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    loadQuestions: _ => dispatch(loadQuestions()),
+    loadCategories: _ => dispatch(loadCategories()),
     postQuestion: text => dispatch(postQuestion(text)),
     postAnswer: (id, text) => dispatch(postAnswer(id, text)),
     login: (username, password) => dispatch(login(username, password)),

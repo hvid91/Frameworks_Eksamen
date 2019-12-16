@@ -9,7 +9,7 @@ const checkJwt = require('express-jwt'); // Check for access tokens automaticall
 /**** Configuration ****/
 const app = express();
 const PORT = process.env.PORT || 8080;
-const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost/qa-site';
+const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost/book-site';
 
 app.use(express.static(path.resolve('..', 'client', 'build')));
 app.use(cors());
@@ -21,7 +21,8 @@ let openPaths = [
     /^(?!\/api).*/gim, // Open everything that doesn't begin with '/api'
     '/api/users/authenticate',
     '/api/users/create',
-    {url: '/api/questions', methods: ['GET']}  // Open GET questions, but not POST.
+    {url: '/api/questions', methods: ['GET']},  // Open GET questions, but not POST.
+    {url: '/api/categories', methods: ['GET']},  // Open GET questions, but not POST.
 ];
 
 // Validate the user using authentication. checkJwt checks for auth token.
@@ -41,6 +42,7 @@ app.use((err, req, res, next) => {
 /**** Database access layers *****/
 const questionDAL = require('./dal/question_dal')(mongoose);
 const userDAL = require('./dal/user_dal')(mongoose);
+const categoryDAL = require("./dal/category_dal")(mongoose);
 
 /**** Start ****/
 mongoose.connect(MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true})
@@ -48,6 +50,7 @@ mongoose.connect(MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true})
         console.log("Database connected");
         await questionDAL.bootstrap();
         await userDAL.bootstrapTestusers();
+        await categoryDAL.bootstrap();
 
         // When DB connection is ready, let's open the API
         const server = await app.listen(PORT);
@@ -67,6 +70,9 @@ mongoose.connect(MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true})
 
         const questionRouter = require('./routers/question_router')(questionDAL, io);
         app.use('/api/questions', questionRouter);
+
+        const categoryRouter = require('./routers/category_router')(categoryDAL, io);
+        app.use('/api/categories', categoryRouter);
 
         // "Redirect" all get requests (except for the routes specified above) to React's entry point (index.html)
         // It's important to specify this route as the very last one to prevent overriding all of the other routes
