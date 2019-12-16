@@ -73,7 +73,6 @@ export const creatUser = (username, password) => async function (dispatch) {
         dispatch(showAndHideAlert("User created", data.msg, "alert"));
         navigate("/"); // Front page
     }
-
 };
 
 /******************************************************

@@ -64,6 +64,13 @@ class App extends Component {
             </section>
         }
 
+        let userLoggedIn = <></>;
+        if (this.props.user.username) {
+            userLoggedIn = <Link to="/books/sell"><h3 className={"subtitle"}>Sell books</h3></Link>
+        } else {
+            userLoggedIn = <Link to="/login"><h3 className={"subtitle"}>Sell books</h3></Link>
+        }
+
         return (
             <>
                 {notification}
@@ -76,7 +83,8 @@ class App extends Component {
                                 Pick a category and find books!
                             </h2>
                             <Link to="/users/create"><h3 className={"subtitle"}>Create User</h3></Link>
-                            <Link to="/books/sell"><h3 className={"subtitle"}>Sell books</h3></Link>
+                            {userLoggedIn}
+
                         </div>
                     </div>
                 </section>
@@ -104,7 +112,7 @@ class App extends Component {
                         />
 
                         <SellBook path="/books/sell"
-
+                                  categories={this.props.categories}
                         />
 
                         <Login path="/login"
