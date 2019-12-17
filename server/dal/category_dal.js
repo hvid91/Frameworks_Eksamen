@@ -51,7 +51,7 @@ class CategoryDAL {
         category.books.push({
             title: book.title,
             author: book.author,
-            category: book.category,
+            category: category.category,
             price: book.price,
             sellerName: book.sellerName,
             sellerEmail: book.sellerEmail

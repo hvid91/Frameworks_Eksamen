@@ -8,8 +8,8 @@ module.exports = (dal, io) => {
 
     router.post('/', (req, res) => {
         let newCategory = {
-            category : req.body.category,
-            books : []
+            category: req.body.category,
+            books: []
         };
         dal.createCategory(newCategory).then(newCategory => res.json(newCategory));
 
@@ -39,13 +39,7 @@ module.exports = (dal, io) => {
             sellerEmail: req.body.sellerEmail
         };
 
-        dal.getCategory(req.param.id).then(data => {
-            console.log(data.category);
-            newBook.category = data.category;
-            dal.addBook(req.params.id, newBook).then(newBook => res.json(newBook));
-        });
-
-
+        dal.addBook(req.params.id, newBook).then(newBook => res.json(newBook));
     });
 
     return router;
