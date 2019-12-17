@@ -13,7 +13,7 @@ function categories(state = [], action) {
 function user(state = {}, action) {
     switch (action.type) {
         case 'ADD_USER_CRED': {
-            return { username: action.username };
+            return { username: action.username, admin: action.admin};
         }
         case 'REMOVE_USER_CRED': {
             return { username: "" };

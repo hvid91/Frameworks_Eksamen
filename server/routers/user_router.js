@@ -16,7 +16,7 @@ module.exports = (dal, secret) => {
             return;
         }
 
-        const user = { "username": username, "password": password};
+        const user = { "username": username, "password": password, "admin": false};
         bcrypt.hash(user.password, 10, async (err, hash) => {
             user.hash = hash; // The hash has been made, and is stored on the user object.
             delete user.password; // The clear text password is no longer needed
@@ -47,7 +47,7 @@ module.exports = (dal, secret) => {
         if (user) { // If the user is found
             bcrypt.compare(password, user.hash, (err, result) => {
                 if (result) { // If the password matched
-                    const payload = { username: username };
+                    const payload = { username: username, admin: user.admin};
                     const token = jwt.sign(payload, secret, { expiresIn: '1h' });
 
                     res.json({

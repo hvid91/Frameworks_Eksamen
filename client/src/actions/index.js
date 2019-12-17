@@ -27,9 +27,10 @@ export const hideAlert = (title, text) => ({
 /******************************************************
  Actions for User credentials and Login / logout / Creat
  ******************************************************/
-export const addUserCredentials = (username) => ({
+export const addUserCredentials = (username, admin) => ({
     type: 'ADD_USER_CRED',
-    username: username
+    username: username,
+    admin: admin
 });
 
 export const removeUserCredentials = (username) => ({
@@ -42,6 +43,7 @@ export const login = (username, password) => async function (dispatch) {
         if (loggedIn.msg === "Username or password missing!" || loggedIn.msg === "Password mismatch!" || loggedIn.msg === "User not found!") {
             dispatch(showAndHideAlert("Login Failed", loggedIn.msg, "error"));
         } else {
+            console.log(loggedIn);
             dispatch(addUserCredentials(username));
             navigate("/"); // Front page
         }

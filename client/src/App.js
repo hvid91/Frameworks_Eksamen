@@ -71,6 +71,8 @@ class App extends Component {
             userLoggedIn = <Link to="/login"><h3 className={"subtitle"}>Sell books</h3></Link>
         }
 
+        // console.log(this.props.user.admin);
+
         return (
             <>
                 {notification}

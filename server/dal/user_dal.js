@@ -5,7 +5,8 @@ class UserDAL {
         this.mongoose = mongoose;
         const userSchema = new mongoose.Schema({
             username: String,
-            hash: String
+            hash: String,
+            admin: Boolean
         });
         this.userModel = mongoose.model('user', userSchema);
     }
@@ -42,9 +43,9 @@ class UserDAL {
         const users = [
             // These are just some test users with passwords.
             // The passwords are in clear text for testing purposes. (don't do this in production)
-            { username: "krdo", password: '123'},
-            { username: "tosk", password: 'password'},
-            { username: "mvkh", password: 'l33th0xor'},
+            { username: "krdo", password: '123', admin: false},
+            { username: "tosk", password: 'password', admin: false},
+            { username: "mvkh", password: 'l33th0xor', admin: false},
         ];
 
         let promises = [];
