@@ -26,10 +26,6 @@ module.exports = (dal, io) => {
         });
     });
 
-    router.get("/hej", (req, res) => {
-        dal.getCategory("5df75b27ec61de044456d46f").then(category => res.json(category));
-    });
-
     router.post('/:id/books', (req, res) => {
         const newBook = {
             title: req.body.title,

@@ -71,7 +71,12 @@ class App extends Component {
             userLoggedIn = <Link to="/login"><h3 className={"subtitle"}>Sell books</h3></Link>
         }
 
-        // console.log(this.props.user.admin);
+        if(this.props.user.admin){
+            console.log("Jeg er admin!")
+        }
+        else{
+            console.log("Jeg er ikke admin!")
+        }
 
         return (
             <>
@@ -102,7 +107,7 @@ class App extends Component {
                         />
 
                         <CreatUser path="/users/create"
-                                   creatUser={(username, password) => this.props.creatUser(username, password)}
+                                   creatUser={(username, password, admin) => this.props.creatUser(username, password, admin)}
                         />
 
                         <Books path="/category/:category"
@@ -152,7 +157,7 @@ const mapDispatchToProps = dispatch => ({
     postAnswer: (id, text) => dispatch(postAnswer(id, text)),
     login: (username, password) => dispatch(login(username, password)),
     logout: _ => dispatch(logout()),
-    creatUser: (username, password) => dispatch(creatUser(username, password)),
+    creatUser: (username, password, admin) => dispatch(creatUser(username, password, admin)),
     voteAnswerUp: (questionId, answerId) => dispatch(voteAnswerUp(questionId, answerId)),
     hideAlert: _ => dispatch(hideAlert())
 });

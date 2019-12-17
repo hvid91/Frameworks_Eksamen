@@ -16,7 +16,7 @@ function user(state = {}, action) {
             return { username: action.username, admin: action.admin};
         }
         case 'REMOVE_USER_CRED': {
-            return { username: "" };
+            return { username: "", admin: false };
         }
         default:
             return state

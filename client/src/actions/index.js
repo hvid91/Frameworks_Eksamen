@@ -43,8 +43,7 @@ export const login = (username, password) => async function (dispatch) {
         if (loggedIn.msg === "Username or password missing!" || loggedIn.msg === "Password mismatch!" || loggedIn.msg === "User not found!") {
             dispatch(showAndHideAlert("Login Failed", loggedIn.msg, "error"));
         } else {
-            console.log(loggedIn);
-            dispatch(addUserCredentials(username));
+            dispatch(addUserCredentials(username, loggedIn.admin));
             navigate("/"); // Front page
         }
     } catch (e) {
@@ -57,13 +56,14 @@ export const logout = _ => async function (dispatch) {
     dispatch(removeUserCredentials());
 };
 
-export const creatUser = (username, password) => async function (dispatch) {
+export const creatUser = (username, password, admin) => async function (dispatch) {
     const url = `${API_URL}/users/create`;
     const response = await Auth.fetch(url, {
         method: 'POST',
         body: JSON.stringify({
             username,
-            password
+            password,
+            admin
         })
     });
     const data = await response.json();

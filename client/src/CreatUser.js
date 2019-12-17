@@ -7,19 +7,24 @@ export default class CreatUser extends Component {
 
         this.state = {
             username: "",
-            password: ""
+            password: "",
+            admin: false
         };
         this.handleInput = this.handleInput.bind(this);
     }
 
     handleInput(event) {
         event.preventDefault();
-        this.props.creatUser(this.state.username, this.state.password);
+        this.props.creatUser(this.state.username, this.state.password, this.state.admin);
     }
 
     onChange(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
         this.setState({
-            [event.target.name]: event.target.value
+            [name]: value
         });
     }
 
@@ -32,6 +37,8 @@ export default class CreatUser extends Component {
                     <input onChange={event => this.onChange(event)} name="username"/>
                     <label className="label" htmlFor="QuestionInput">Your username</label>
                     <input onChange={event => this.onChange(event)} name="password"/>
+                    <label className="label" htmlFor="QuestionInput">Admin</label>
+                    <input type="checkbox" onChange={event => this.onChange(event)} name="admin"/>
                 </div>
                 <div className="field">
                     <button className="button is-primary" onClick={this.handleInput} type="submit"
