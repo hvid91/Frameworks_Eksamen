@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link, Router} from "@reach/router";
+import {Link, Redirect, Router} from "@reach/router";
 import {connect} from "react-redux";
 import io from 'socket.io-client';
 
@@ -8,11 +8,12 @@ import Books from "./Books";
 import Login from "./Login";
 import Alert from "./Alert";
 import UserHeader from "./UserHeader";
-
-import {login, logout, loadCategories, postBook, postAnswer, voteAnswerUp, hideAlert, creatUser} from './actions';
 import CreatUser from "./CreatUser";
 import Book from "./Book";
 import SellBook from "./SellBook";
+import Admin from "./Admin";
+
+import {login, logout, loadCategories, postBook, postCategory, voteAnswerUp, hideAlert, creatUser, deleteCategory} from './actions';
 
 class App extends Component {
     constructor(props) {
@@ -42,7 +43,6 @@ class App extends Component {
         })
     }
 
-
     render() {
         let notification = <></>;
         if (this.props.notifications.active) {
@@ -66,16 +66,14 @@ class App extends Component {
 
         let userLoggedIn = <></>;
         if (this.props.user.username) {
-            userLoggedIn = <Link to="/books/sell"><h3 className={"subtitle"}>Sell books</h3></Link>
+            userLoggedIn = <Link to="/books/sell"><h2 className={"subtitle"}>Sell books</h2></Link>
         } else {
-            userLoggedIn = <Link to="/login"><h3 className={"subtitle"}>Sell books</h3></Link>
+            userLoggedIn = <Link to="/login"><h2 className={"subtitle"}>Sell books</h2></Link>
         }
 
-        if(this.props.user.admin){
-            console.log("Jeg er admin!")
-        }
-        else{
-            console.log("Jeg er ikke admin!")
+        let adminLoggedIN = <></>;
+        if (this.props.user.admin) {
+            adminLoggedIN = <Link to="/admin"><h2 className={"subtitle"}>Admin page</h2></Link>
         }
 
         return (
@@ -89,9 +87,9 @@ class App extends Component {
                             <h2 className="subtitle">
                                 Pick a category and find books!
                             </h2>
-                            <Link to="/users/create"><h3 className={"subtitle"}>Create User</h3></Link>
+                            <Link to="/users/create"><h2 className={"subtitle"}>Create User</h2></Link>
                             {userLoggedIn}
-
+                            {adminLoggedIN}
                         </div>
                     </div>
                 </section>
@@ -115,12 +113,20 @@ class App extends Component {
                         />
 
                         <Book path="/books/:_id"
-                              getBook={(_id) => this.props.categories.map(d => d.books.find(e => e._id === _id)).filter(c => c !== undefined)[0]}
+                              getBook={_id => this.props.categories.map(d => d.books.find(e => e._id === _id)).filter(c => c !== undefined)[0]}
                         />
 
                         <SellBook path="/books/sell"
                                   categories={this.props.categories}
                                   postBook={(title, author, categoryID, price, sellerName, sellerEmail) => this.props.postBook(title, author, categoryID, price, sellerName, sellerEmail)}
+                                  loggedIn={this.props.user.username}
+                        />
+
+                        <Admin path="/admin"
+                               categories={this.props.categories}
+                               loggedIn={this.props.user.admin}
+                               postCategory={category => this.props.postCategory(category)}
+                               deleteCategory={id => this.props.deleteCategory(id)}
                         />
 
                         <Login path="/login"
@@ -128,9 +134,7 @@ class App extends Component {
                                infoMsg={this.state.infoMsg}
                         />
                     </Router>
-
                 </section>
-
                 <footer className="footer">
                     <div className="container">
                         <div className="content has-text-centered">
@@ -154,7 +158,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     loadCategories: _ => dispatch(loadCategories()),
     postBook: (title, author, categoryID, price, sellerName, sellerEmail) => dispatch(postBook(title, author, categoryID, price, sellerName, sellerEmail)),
-    postAnswer: (id, text) => dispatch(postAnswer(id, text)),
+    postCategory: (category) => dispatch(postCategory(category)),
+    deleteCategory: id => dispatch(deleteCategory(id)),
     login: (username, password) => dispatch(login(username, password)),
     logout: _ => dispatch(logout()),
     creatUser: (username, password, admin) => dispatch(creatUser(username, password, admin)),

@@ -7,23 +7,31 @@ module.exports = (dal, io) => {
     });
 
     router.post('/', (req, res) => {
-        let newCategory = {
-            category: req.body.category,
-            books: []
-        };
-        dal.createCategory(newCategory).then(newCategory => res.json(newCategory));
+        if (!req.user.admin) {
+            return res.sendStatus(401);
+        } else {
+            let newCategory = {
+                category: req.body.category,
+                books: []
+            };
+            dal.createCategory(newCategory).then(newCategory => res.json(newCategory));
 
-        io.of("/my_app").emit("new-data", {
-            msg: "New data is available"
-        });
+            io.of("/my_app").emit("new-data", {
+                msg: "New data is available"
+            });
+        }
     });
 
     router.delete("/", (req, res) => {
-        dal.removeCategory(req.body.id).then(deletedCategory => res.json(deletedCategory));
+        if (!req.user.admin) {
+            return res.sendStatus(401);
+        } else {
+            dal.removeCategory(req.body.id).then(deletedCategory => res.json(deletedCategory));
 
-        io.of("/my_app").emit("new-data", {
-            msg: "New data is available"
-        });
+            io.of("/my_app").emit("new-data", {
+                msg: "New data is available"
+            });
+        }
     });
 
     router.post('/:id/books', (req, res) => {

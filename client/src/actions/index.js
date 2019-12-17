@@ -97,7 +97,7 @@ export const loadCategories = _ => async function (dispatch) {
 };
 
 export const postBook = (title, author, categoryID, price, sellerName, sellerEmail) => async function (dispatch) {
-    // if (text === "") return;
+    if (title === "" || author === "" || categoryID === "" || price <= 0 || sellerName === "" || sellerEmail === "") return;
     try {
         const newBook = {
             title: title,
@@ -115,7 +115,9 @@ export const postBook = (title, author, categoryID, price, sellerName, sellerEma
             dispatch(showAndHideAlert("Login", "You need to login to post questions!", "alert"));
         } else {
             await response.json();
+            dispatch(showAndHideAlert("Book", "Your book is now for sell", "alert"));
             dispatch(loadCategories());
+            navigate("/"); // Front page
         }
     } catch (e) {
         dispatch(showAndHideAlert("Send question error", e.message, "error"));
@@ -123,12 +125,32 @@ export const postBook = (title, author, categoryID, price, sellerName, sellerEma
     }
 };
 
-export const postAnswer = (id, text) => async function (dispatch) {
-    if (text === "") return;
+export const postCategory = (category) => async function (dispatch) {
+    if (category === "") return;
     try {
-        const response = await Auth.fetch(`${API_URL}/questions/${id}/answers`, {
+        const response = await Auth.fetch(`${API_URL}/categories`, {
             method: "POST",
-            body: JSON.stringify({text: text})
+            body: JSON.stringify({category: category})
+        });
+
+        if (response.status === 401) {
+            dispatch(showAndHideAlert("Login", "You need to login to post answers!", "alert"));
+            await navigate("/login");
+        } else {
+            await response.json();
+            dispatch(loadCategories());
+        }
+    } catch (e) {
+        dispatch(showAndHideAlert("Give answer error", e.message, "error"));
+        console.error(e);
+    }
+};
+
+export const deleteCategory = (id) => async function (dispatch) {
+    try {
+        const response = await Auth.fetch(`${API_URL}/categories`, {
+            method: "DELETE",
+            body: JSON.stringify({id: id})
         });
 
         if (response.status === 401) {

@@ -22,7 +22,6 @@ let openPaths = [
     '/api/users/authenticate',
     '/api/users/create',
     {url: '/api/categories', methods: ['GET']},  // Open GET questions, but not POST.
-    {url: '/api/categories/hej', methods: ['GET']},  // Open GET questions, but not POST.
 ];
 
 // Validate the user using authentication. checkJwt checks for auth token.

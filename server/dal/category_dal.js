@@ -40,7 +40,7 @@ class CategoryDAL {
 
     async removeCategory(categoryID) {
         try {
-            await this.categoryModel.remove({"_id": categoryID})
+             return await this.categoryModel.deleteOne({"_id": categoryID})
         } catch (error) {
             console.error("removeBook:", error.message);
         }

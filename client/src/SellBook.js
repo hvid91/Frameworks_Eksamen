@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {navigate} from "@reach/router";
 
 export default class SellBook extends Component {
 
@@ -28,6 +29,10 @@ export default class SellBook extends Component {
     }
 
     render() {
+        if(!this.props.loggedIn){
+            navigate("/login")
+        }
+
         return (
             <form>
                 <div className="field">
