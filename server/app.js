@@ -18,6 +18,7 @@ app.use(morgan('combined')); // Log all requests to the console
 
 // Open paths that does not need login. Any route not included here is protected!
 let openPaths = [
+    /^(?!\/api).*/gim, // Open everything that doesn't begin with '/api'
     '/api/users/authenticate',
     '/api/users/create',
     {url: '/api/categories', methods: ['GET']},  // Open GET questions, but not POST.
