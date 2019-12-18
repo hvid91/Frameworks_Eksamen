@@ -12,8 +12,14 @@ class UserDAL {
     }
 
     async createUser(user) {
-        let newUser = new this.userModel(user);
-        return newUser.save();
+        try{
+            let newUser = new this.userModel(user);
+            return newUser.save();
+        }
+        catch (error) {
+            console.error("getUser:", error.message);
+        }
+
     }
 
     async getUser(username) {
@@ -35,6 +41,8 @@ class UserDAL {
     }
 
     async bootstrapTestusers() {
+        // This is here only to make users in the database on start if there is none.
+
         let l = (await this.getUsers()).length;
         console.log("Users in system:", l);
 
@@ -44,8 +52,7 @@ class UserDAL {
             // These are just some test users with passwords.
             // The passwords are in clear text for testing purposes. (don't do this in production)
             { username: "krdo", password: '123', admin: false},
-            { username: "tosk", password: 'password', admin: false},
-            { username: "mvkh", password: 'l33th0xor', admin: false},
+            { username: "krdoadmin", password: '123', admin: true},
         ];
 
         let promises = [];

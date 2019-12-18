@@ -34,29 +34,39 @@ class CategoryDAL {
     }
 
     async createCategory(newCategory) {
-        let question = new this.categoryModel(newCategory);
-        return question.save();
+        try{
+            let question = new this.categoryModel(newCategory);
+            return question.save();
+        }
+        catch (error) {
+            console.error("createCategory:", error.message);
+        }
     }
 
     async removeCategory(categoryID) {
         try {
              return await this.categoryModel.deleteOne({"_id": categoryID})
         } catch (error) {
-            console.error("removeBook:", error.message);
+            console.error("removeCategory:", error.message);
         }
     }
 
     async addBook(categoryId, book) {
-        const category = await this.getCategory(categoryId);
-        category.books.push({
-            title: book.title,
-            author: book.author,
-            category: category.category,
-            price: book.price,
-            sellerName: book.sellerName,
-            sellerEmail: book.sellerEmail
-        });
-        return category.save();
+        try{
+            const category = await this.getCategory(categoryId);
+            category.books.push({
+                title: book.title,
+                author: book.author,
+                category: category.category,
+                price: book.price,
+                sellerName: book.sellerName,
+                sellerEmail: book.sellerEmail
+            });
+            return category.save();
+        }
+        catch (error) {
+            console.error("addBook:", error.message);
+        }
     }
 
     async bootstrap() {

@@ -10,7 +10,7 @@ module.exports = (dal, io) => {
         if (!req.user.admin) {
             return res.sendStatus(401);
         } else {
-            let newCategory = {
+            const newCategory = {
                 category: req.body.category,
                 books: []
             };

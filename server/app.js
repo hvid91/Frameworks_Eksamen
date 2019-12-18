@@ -18,7 +18,6 @@ app.use(morgan('combined')); // Log all requests to the console
 
 // Open paths that does not need login. Any route not included here is protected!
 let openPaths = [
-    /^(?!\/api).*/gim, // Open everything that doesn't begin with '/api'
     '/api/users/authenticate',
     '/api/users/create',
     {url: '/api/categories', methods: ['GET']},  // Open GET questions, but not POST.
@@ -39,7 +38,6 @@ app.use((err, req, res, next) => {
 });
 
 /**** Database access layers *****/
-// const questionDAL = require('./dal/question_dal')(mongoose);
 const userDAL = require('./dal/user_dal')(mongoose);
 const categoryDAL = require("./dal/category_dal")(mongoose);
 
@@ -47,7 +45,6 @@ const categoryDAL = require("./dal/category_dal")(mongoose);
 mongoose.connect(MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true})
     .then(async () => {
         console.log("Database connected");
-        // await questionDAL.bootstrap();
         await userDAL.bootstrapTestusers();
         await categoryDAL.bootstrap();
 
@@ -55,20 +52,17 @@ mongoose.connect(MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true})
         const server = await app.listen(PORT);
         console.log(`QA API running on port ${PORT}!`);
 
+        /**** Socket IO ****/
         const io = require("socket.io").listen(server);
-
         io.of("/my_app").on("connection", function (socket) {
-           socket.on("disconnect", () => {
-               console.log("Someone disconnected...");
-           });
+            socket.on("disconnect", () => {
+                console.log("Someone disconnected...");
+            });
         });
 
         /**** Routes ****/
         const usersRouter = require('./routers/user_router')(userDAL, secret);
         app.use('/api/users', usersRouter);
-
-        // const questionRouter = require('./routers/question_router')(questionDAL, io);
-        // app.use('/api/questions', questionRouter);
 
         const categoryRouter = require('./routers/category_router')(categoryDAL, io);
         app.use('/api/categories', categoryRouter);
