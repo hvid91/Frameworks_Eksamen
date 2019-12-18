@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link, navigate} from "@reach/router";
+import {navigate} from "@reach/router";
 
 export default class Admin extends Component {
 
@@ -46,7 +46,7 @@ export default class Admin extends Component {
 
                 <form>
                     <div className="field">
-                        <label className="label" htmlFor="AnswerInput">New category</label>
+                        <label className="label" >New category</label>
                         <div className="control">
                         <textarea className="textarea" onChange={this.onChange}
                                   placeholder="Category"
@@ -55,7 +55,7 @@ export default class Admin extends Component {
                     </div>
                     <div className="field">
                         <button className="button is-primary" onClick={this.handleInput} type="submit"
-                                id="AnswerButton">Add Category
+                                id="CategoryButton">Add Category
                         </button>
                     </div>
                 </form>

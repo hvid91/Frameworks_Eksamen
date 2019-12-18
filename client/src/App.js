@@ -115,6 +115,7 @@ class App extends Component {
 
                         <Book path="/books/:_id"
                               getBook={_id => this.props.categories.map(d => d.books.find(e => e._id === _id)).filter(c => c !== undefined)[0]}
+                              // getBook={_id => this.props.categories.find(e => e.books.filter(d => d._id === _id))}
                         />
 
                         <SellBook path="/books/sell"

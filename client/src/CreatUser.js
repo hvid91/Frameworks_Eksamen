@@ -33,16 +33,16 @@ export default class CreatUser extends Component {
             <form>
 
                 <div className="field" >
-                    <label className="label" htmlFor="QuestionInput">Your username</label>
+                    <label className="label" >Your username</label>
                     <input onChange={event => this.onChange(event)} name="username"/>
-                    <label className="label" htmlFor="QuestionInput">Your username</label>
+                    <label className="label" >Your username</label>
                     <input onChange={event => this.onChange(event)} name="password"/>
-                    <label className="label" htmlFor="QuestionInput">Admin</label>
+                    <label className="label" >Admin</label>
                     <input type="checkbox" onChange={event => this.onChange(event)} name="admin"/>
                 </div>
                 <div className="field">
                     <button className="button is-primary" onClick={this.handleInput} type="submit"
-                            id="QuestionButton">Create user
+                            id="CreatUserButton">Create user
                     </button>
                 </div>
             </form>
