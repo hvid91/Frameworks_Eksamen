@@ -6,13 +6,12 @@ export default class Books extends Component {
     render() {
         const category = this.props.getCategories(this.props.category);
         let categoryContent = <p>loading...</p>;
-
         if (category) {
             categoryContent = category.books ?
                 category.books.map(
                     book =>
                         <li key={book._id}>
-                            <Link className="list-item" to={"/books/" + book._id}>
+                            <Link className="list-item" to={"/books/" + this.props.category + "/" + book._id}>
                                 {<div key={book._id} className="columns">
                                     <div className="column">{book.title}</div>
                                 </div>}</Link>

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link, Redirect, Router} from "@reach/router";
+import {Link, Router} from "@reach/router";
 import {connect} from "react-redux";
 import io from 'socket.io-client';
 
@@ -73,7 +73,7 @@ class App extends Component {
         }
 
         let adminLoggedIN = <></>;
-        if (this.props.user.admin === true) {
+        if (this.props.user.admin) {
              adminLoggedIN = <Link to="/admin"><h2 className={"subtitle"}>Admin page</h2></Link>
         }
 
@@ -113,20 +113,21 @@ class App extends Component {
                                getCategories={(category) => this.props.categories.find(e => e.category === category)}
                         />
 
-                        <Book path="/books/:_id"
-                              getBook={_id => this.props.categories.map(d => d.books.find(e => e._id === _id)).filter(c => c !== undefined)[0]}
-                              // getBook={_id => this.props.categories.find(e => e.books.filter(d => d._id === _id))}
+                        <Book path="/books/:category/:_id"
+                            getBook={_id => this.props.categories.map(d => d.books.find(e => e._id === _id)).filter(c => c !== undefined)[0]}
                         />
 
                         <SellBook path="/books/sell"
                                   categories={this.props.categories}
                                   postBook={(title, author, categoryID, price, sellerName, sellerEmail) => this.props.postBook(title, author, categoryID, price, sellerName, sellerEmail)}
                                   loggedIn={this.props.user.username}
-                        />
+                                  loggedInUser={_ => this.props.loggedInUser()}
+                    />
 
                         <Admin path="/admin"
                                categories={this.props.categories}
                                loggedIn={this.props.user.admin}
+                               loggedInUser={_ => this.props.loggedInUser()}
                                postCategory={category => this.props.postCategory(category)}
                                deleteCategory={id => this.props.deleteCategory(id)}
                         />

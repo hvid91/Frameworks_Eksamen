@@ -12,9 +12,18 @@ export default class SellBook extends Component {
             categoryID: "",
             price: 0,
             sellerName: "",
-            sellerEmail: ""
+            sellerEmail: "",
         };
         this.handleInput = this.handleInput.bind(this);
+        this.onChange = this.onChange.bind(this);
+    }
+
+    async componentDidMount() {
+        await this.props.loggedInUser();
+
+        if(!this.props.loggedIn){
+            navigate("/login")
+        }
     }
 
     handleInput(event) {
@@ -29,30 +38,25 @@ export default class SellBook extends Component {
     }
 
     render() {
-        if(!this.props.loggedIn){
-            navigate("/login")
-        }
-
         return (
             <form>
                 <div className="field">
                     <label className="label" >The title</label>
-                    <input onChange={event => this.onChange(event)} name="title"/>
+                    <input onChange={this.onChange} name="title"/>
                     <label className="label" >The author</label>
-                    <input onChange={event => this.onChange(event)} name="author"/>
+                    <input onChange={this.onChange} name="author"/>
                     <label className="label" >The category</label>
-                    <select onChange={event => this.onChange(event)}
-                            name="categoryID">
+                    <select onChange={this.onChange} name="categoryID">
                         <option value="" selected disabled hidden>Choose here</option>
-                        {this.props.categories.map((c, index) =>
-                        <option key={index} value={c._id}>{c.category}</option>)}
+                        {this.props.categories.map((c) =>
+                            <option key={c._id} value={c._id}>{c.category}</option>)}
                     </select>
                     <label className="label" >The price</label>
-                    <input onChange={event => this.onChange(event)} type="number" name="price"/>
+                    <input onChange={this.onChange} type="number" name="price"/>
                     <label className="label" >Your name</label>
-                    <input onChange={event => this.onChange(event)} name="sellerName"/>
+                    <input onChange={this.onChange} name="sellerName"/>
                     <label className="label" >Your email</label>
-                    <input onChange={event => this.onChange(event)} name="sellerEmail"/>
+                    <input onChange={this.onChange} name="sellerEmail"/>
                 </div>
                 <div className="field">
                     <button className="button is-primary" onClick={this.handleInput} type="submit"

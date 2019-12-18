@@ -13,6 +13,14 @@ export default class Admin extends Component {
         this.onChange = this.onChange.bind(this);
     }
 
+   async componentDidMount() {
+       await this.props.loggedInUser();
+
+       if(!this.props.loggedIn){
+            navigate("/login")
+        }
+    }
+
     handleInput(event) {
         event.preventDefault();
         this.props.postCategory(this.state.category);
@@ -30,10 +38,6 @@ export default class Admin extends Component {
     }
 
     render() {
-        if(!this.props.loggedIn){
-            navigate("/login")
-        }
-
         return (
             <>
                 <div className="container">
