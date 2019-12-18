@@ -23,6 +23,7 @@ class AuthService {
         }
         this.setToken(json.token);
         this.setUsername(username);
+        this.setAdmin(json.admin);
         return json;
     }
 
@@ -50,6 +51,14 @@ class AuthService {
         return localStorage.getItem("username");
     }
 
+    setAdmin(admin) {
+        localStorage.setItem("admin", admin);
+    }
+
+    getAdmin() {
+        return localStorage.getItem("admin");
+    }
+
     getToken() {
         return localStorage.getItem(this.TOKEN_KEY);
     }
@@ -57,6 +66,7 @@ class AuthService {
     logout() {
         localStorage.removeItem(this.TOKEN_KEY);
         localStorage.removeItem("username");
+        localStorage.removeItem("admin");
     }
 
     fetch(url, options) {

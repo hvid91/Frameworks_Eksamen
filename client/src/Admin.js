@@ -30,6 +30,10 @@ export default class Admin extends Component {
     }
 
     render() {
+        if(!this.props.loggedIn){
+            navigate("/login")
+        }
+
         return (
             <>
                 <div className="container">

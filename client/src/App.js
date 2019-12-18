@@ -13,7 +13,7 @@ import Book from "./Book";
 import SellBook from "./SellBook";
 import Admin from "./Admin";
 
-import {login, logout, loadCategories, postBook, postCategory, voteAnswerUp, hideAlert, creatUser, deleteCategory} from './actions';
+import {login, logout, loadCategories, postBook, postCategory, loggedInUser, hideAlert, creatUser, deleteCategory} from './actions';
 
 class App extends Component {
     constructor(props) {
@@ -27,6 +27,7 @@ class App extends Component {
 
     componentDidMount() {
         this.props.loadCategories();
+        this.props.loggedInUser();
 
         const socket = io(this.SOCKET_URL);
 
@@ -72,8 +73,8 @@ class App extends Component {
         }
 
         let adminLoggedIN = <></>;
-        if (this.props.user.admin) {
-            adminLoggedIN = <Link to="/admin"><h2 className={"subtitle"}>Admin page</h2></Link>
+        if (this.props.user.admin === true) {
+             adminLoggedIN = <Link to="/admin"><h2 className={"subtitle"}>Admin page</h2></Link>
         }
 
         return (
@@ -157,13 +158,13 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     loadCategories: _ => dispatch(loadCategories()),
+    loggedInUser: _ => dispatch(loggedInUser()),
     postBook: (title, author, categoryID, price, sellerName, sellerEmail) => dispatch(postBook(title, author, categoryID, price, sellerName, sellerEmail)),
     postCategory: (category) => dispatch(postCategory(category)),
     deleteCategory: id => dispatch(deleteCategory(id)),
     login: (username, password) => dispatch(login(username, password)),
     logout: _ => dispatch(logout()),
     creatUser: (username, password, admin) => dispatch(creatUser(username, password, admin)),
-    voteAnswerUp: (questionId, answerId) => dispatch(voteAnswerUp(questionId, answerId)),
     hideAlert: _ => dispatch(hideAlert())
 });
 

@@ -76,6 +76,13 @@ export const creatUser = (username, password, admin) => async function (dispatch
     }
 };
 
+export const loggedInUser = _ => async function (dispatch) {
+    if(Auth.getToken()){
+        dispatch(addUserCredentials(Auth.getUsername(), Auth.getAdmin() === "true"));
+    }
+};
+
+
 /******************************************************
  Actions for handling categories and books.
  ******************************************************/
@@ -162,24 +169,6 @@ export const deleteCategory = (id) => async function (dispatch) {
         }
     } catch (e) {
         dispatch(showAndHideAlert("Give answer error", e.message, "error"));
-        console.error(e);
-    }
-};
-
-export const voteAnswerUp = (questionId, answerId) => async function (dispatch) {
-    try {
-        const response = await Auth.fetch(`${API_URL}/questions/${questionId}/answers/${answerId}/vote`, {
-            method: "PUT",
-            body: JSON.stringify({voteCount: 1})
-        });
-        if (response.status === 401) {
-            dispatch(showAndHideAlert("Login", "You need to login to vote!", "alert"));
-            await navigate("/login");
-        }
-        await response.json();
-        dispatch(loadCategories());
-    } catch (e) {
-        dispatch(showAndHideAlert("Vote error", e.message, "error"));
         console.error(e);
     }
 };
