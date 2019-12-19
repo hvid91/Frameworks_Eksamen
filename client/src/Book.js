@@ -5,7 +5,6 @@ export default class Book extends Component {
 
     render() {
         const bookData = this.props.getBook(this.props._id);
-        console.log(bookData);
         let bookContent = <p>loading...</p>;
 
         if (bookData) {
