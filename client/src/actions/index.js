@@ -58,6 +58,7 @@ export const login = (username, password) => async function (dispatch) {
 
 export const logout = _ => async function (dispatch) {
     Auth.logout();
+    navigate("/");
     dispatch(removeUserCredentials());
 };
 
@@ -83,7 +84,7 @@ export const creatUser = (username, password, admin) => async function (dispatch
             dispatch(showAndHideAlert("User not created", data.msg, "error"));
         }
         else{
-            dispatch(showAndHideAlert("User created", data.msg, "alert"));
+            dispatch(showAndHideAlert("User created", "New user created", "alert"));
             navigate("/"); // Front page
         }
     }
