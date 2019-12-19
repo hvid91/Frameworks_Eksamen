@@ -53,7 +53,7 @@ export default class SellBook extends Component {
                             <option key={c._id} value={c._id}>{c.category}</option>)}
                     </select>
                     <label className="label" >The price</label>
-                    <input onChange={this.onChange} type="number" name="price"/>
+                    <input onChange={this.onChange} defaultValue={0} type="number" name="price"/>
                     <label className="label" >Your name</label>
                     <input onChange={this.onChange} name="sellerName"/>
                     <label className="label" >Your email</label>

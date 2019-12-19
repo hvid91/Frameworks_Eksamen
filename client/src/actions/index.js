@@ -122,8 +122,12 @@ export const loadCategories = _ => async function (dispatch) {
 
 export const postBook = (title, author, categoryID, price, sellerName, sellerEmail) => async function (dispatch) {
     const reg = RegExp(/^[ÆØÅæøåA-Za-z0-9._%+-]+@(?:[ÆØÅæøåA-Za-z0-9-]+.)+[A-Za-z]{2,6}$/);
-    if (title === "" || author === "" || categoryID === "" || price <= 0 || sellerName === "" || sellerEmail === "") {
+    if (title === "" || author === "" || categoryID === "" || sellerName === "" || sellerEmail === "") {
         dispatch(showAndHideAlert("Empty fields", "You need to put data in all fields", "error"));
+        return;
+    }
+    if(price <= 0){
+        dispatch(showAndHideAlert("Price error", "The price can be less or equal then 0", "error"));
         return;
     }
     if(!reg.test(sellerEmail)){
@@ -147,7 +151,7 @@ export const postBook = (title, author, categoryID, price, sellerName, sellerEma
             dispatch(showAndHideAlert("Login failed", "You need to login to sell books!", "alert"));
         } else {
             await response.json();
-            dispatch(showAndHideAlert("Book", "Your book is now for sell", "alert"));
+            dispatch(showAndHideAlert("Book", "Your book is now for sale", "alert"));
             dispatch(loadCategories());
             navigate("/"); // Front page
         }

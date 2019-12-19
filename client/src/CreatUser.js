@@ -35,8 +35,8 @@ export default class CreatUser extends Component {
                 <div className="field" >
                     <label className="label" >Your username</label>
                     <input onChange={event => this.onChange(event)} name="username"/>
-                    <label className="label" >Your username</label>
-                    <input onChange={event => this.onChange(event)} name="password"/>
+                    <label className="label" >Your password</label>
+                    <input type="password" onChange={event => this.onChange(event)} name="password"/>
                     <label className="label" >Admin</label>
                     <input type="checkbox" onChange={event => this.onChange(event)} name="admin"/>
                 </div>
