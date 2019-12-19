@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link} from "@reach/router";
+import {Link, navigate} from "@reach/router";
 
 export default class Books extends Component {
 
@@ -31,6 +31,7 @@ export default class Books extends Component {
                         </ul>
                     </section>
                 </div>
+                <Link to="/"><h2 className={"subtitle"}>Go back to categories</h2></Link>
             </>
         )
     };

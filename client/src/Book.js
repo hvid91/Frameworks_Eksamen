@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Link} from "@reach/router";
 
 export default class Book extends Component {
 
@@ -32,6 +33,7 @@ export default class Book extends Component {
                         </ul>
                     </section>
                 </div>
+                <Link to={"/category/" + this.props.category}><h2 className={"subtitle"}>{`Go back to list of books from ${this.props.category}`}</h2></Link>
             </>
         )
     };

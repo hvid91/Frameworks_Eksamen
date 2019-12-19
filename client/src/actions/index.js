@@ -168,7 +168,7 @@ export const postCategory = (category) => async function (dispatch) {
         } else {
             await response.json();
             dispatch(loadCategories());
-            dispatch(showAndHideAlert("Post success", "New category made!", "alert"));
+            dispatch(showAndHideAlert("Post successful", "New category made!", "alert"));
         }
     } catch (e) {
         dispatch(showAndHideAlert("Category error", e.message, "error"));
@@ -189,7 +189,7 @@ export const deleteCategory = (id) => async function (dispatch) {
         } else {
             await response.json();
             dispatch(loadCategories());
-            dispatch(showAndHideAlert("Delete success", "The category was deleted!", "alert"));
+            dispatch(showAndHideAlert("Delete successful", "The category was deleted!", "alert"));
         }
     } catch (e) {
         dispatch(showAndHideAlert("Category error", e.message, "error"));
