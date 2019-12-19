@@ -1,6 +1,7 @@
 module.exports = (dal, secret) => {
     let express = require('express');
     let router = express.Router();
+    let error = require("../helpers/error_check");
 
     const jwt = require('jsonwebtoken');
     const bcrypt = require('bcryptjs');
@@ -10,10 +11,12 @@ module.exports = (dal, secret) => {
         const password = req.body.password;
         const admin = req.body.admin;
 
-        if (!username || !password) {
-            let msg = "Username or password missing!";
-            console.error(msg);
-            res.status(401).json({msg: msg});
+        if (!username) {
+            error.checker(res, "username");
+            return;
+        }
+        if(!password){
+            error.checker(res, "password");
             return;
         }
 
@@ -36,14 +39,15 @@ module.exports = (dal, secret) => {
         const username = req.body.username;
         const password = req.body.password;
 
-        if (!username || !password) {
-            let msg = "Username or password missing!";
-            console.error(msg);
-            res.status(401).json({msg: msg});
+        if (!username) {
+            error.checker(res, "username");
+            return;
+        }
+        if(!password){
+            error.checker(res, "password");
             return;
         }
 
-        //const user = users.find((user) => user.username === username);
         const user = await dal.getUser(username);
         if (user) { // If the user is found
             bcrypt.compare(password, user.hash, (err, result) => {

@@ -54,7 +54,7 @@ export default class Admin extends Component {
                         <div className="control">
                         <textarea className="textarea" onChange={this.onChange}
                                   placeholder="Category"
-                                  id="AnswerInput"/>
+                                  id="AdminInput"/>
                         </div>
                     </div>
                     <div className="field">

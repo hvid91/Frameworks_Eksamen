@@ -38,16 +38,21 @@ export const removeUserCredentials = (username) => ({
 });
 
 export const login = (username, password) => async function (dispatch) {
+    if (username === "" || password === "") {
+        dispatch(showAndHideAlert("Empty fields", "You need to put data in all fields", "error"));
+        return;
+    }
     try {
-        const loggedIn = await Auth.login(username, password);
-        if (loggedIn.msg === "Username or password missing!" || loggedIn.msg === "Password mismatch!" || loggedIn.msg === "User not found!") {
-            dispatch(showAndHideAlert("Login Failed", loggedIn.msg, "error"));
+        const response = await Auth.login(username, password);
+        if (response.msg === "Password mismatch!" || response.msg === "User not found!") {
+            dispatch(showAndHideAlert("Login failed", response.msg, "error"));
         } else {
-            dispatch(addUserCredentials(username, loggedIn.admin));
+            dispatch(addUserCredentials(username, response.admin));
+            dispatch(showAndHideAlert("Logged in", "You are now logged in", "alert"));
             navigate("/"); // Front page
         }
-    } catch (e) {
-        dispatch(showAndHideAlert("Login Failed", e.message, "error"));
+    } catch (error) {
+        dispatch(showAndHideAlert("Login failed", error.message, "error"));
     }
 };
 
@@ -57,27 +62,33 @@ export const logout = _ => async function (dispatch) {
 };
 
 export const creatUser = (username, password, admin) => async function (dispatch) {
-    const url = `${API_URL}/users/create`;
-    const response = await Auth.fetch(url, {
-        method: 'POST',
-        body: JSON.stringify({
-            username,
-            password,
-            admin
-        })
-    });
-    const data = await response.json();
+    if (username === "" || password === "") {
+        dispatch(showAndHideAlert("Empty fields", "You need to put data in all fields", "error"));
+        return;
+    }
 
-    if (data.msg === "Username or password missing!") {
-        dispatch(showAndHideAlert("User not created", data.msg, "error"));
-    } else {
+    try{
+        const url = `${API_URL}/users/create`;
+        const response = await Auth.fetch(url, {
+            method: 'POST',
+            body: JSON.stringify({
+                username,
+                password,
+                admin
+            })
+        });
+        const data = await response.json();
+
         dispatch(showAndHideAlert("User created", data.msg, "alert"));
         navigate("/"); // Front page
+    }
+    catch (error) {
+        dispatch(showAndHideAlert("Login failed", error.message, "error"));
     }
 };
 
 export const loggedInUser = _ => async function (dispatch) {
-    if(Auth.getToken()){
+    if (Auth.getToken()) {
         dispatch(addUserCredentials(Auth.getUsername(), Auth.getAdmin() === "true"));
     }
 };
@@ -104,7 +115,15 @@ export const loadCategories = _ => async function (dispatch) {
 };
 
 export const postBook = (title, author, categoryID, price, sellerName, sellerEmail) => async function (dispatch) {
-    if (title === "" || author === "" || categoryID === "" || price <= 0 || sellerName === "" || sellerEmail === "") return;
+    const reg = RegExp(/^[ÆØÅæøåA-Za-z0-9._%+-]+@(?:[ÆØÅæøåA-Za-z0-9-]+.)+[A-Za-z]{2,6}$/);
+    if(!reg.test(sellerEmail)){
+        dispatch(showAndHideAlert("Email not valid", "Type in new email", "error"));
+        return;
+    }
+    if (title === "" || author === "" || categoryID === "" || price <= 0 || sellerName === "" || sellerEmail === "") {
+        dispatch(showAndHideAlert("Empty fields", "You need to put data in all fields", "error"));
+        return;
+    }
     try {
         const newBook = {
             title: title,
@@ -119,7 +138,7 @@ export const postBook = (title, author, categoryID, price, sellerName, sellerEma
             body: JSON.stringify(newBook)
         });
         if (response.status === 401) {
-            dispatch(showAndHideAlert("Login", "You need to login to post questions!", "alert"));
+            dispatch(showAndHideAlert("Login failed", "You need to login to sell books!", "alert"));
         } else {
             await response.json();
             dispatch(showAndHideAlert("Book", "Your book is now for sell", "alert"));
@@ -127,13 +146,16 @@ export const postBook = (title, author, categoryID, price, sellerName, sellerEma
             navigate("/"); // Front page
         }
     } catch (e) {
-        dispatch(showAndHideAlert("Send question error", e.message, "error"));
+        dispatch(showAndHideAlert("Book", e.message, "error"));
         console.error(e);
     }
 };
 
 export const postCategory = (category) => async function (dispatch) {
-    if (category === "") return;
+    if (category === "") {
+        dispatch(showAndHideAlert("Empty field", "You need to put data in the field", "error"));
+        return;
+    }
     try {
         const response = await Auth.fetch(`${API_URL}/categories`, {
             method: "POST",
@@ -141,14 +163,15 @@ export const postCategory = (category) => async function (dispatch) {
         });
 
         if (response.status === 401) {
-            dispatch(showAndHideAlert("Login", "You need to login to post answers!", "alert"));
+            dispatch(showAndHideAlert("Post failed", "You need to be a admin to post category!", "error"));
             await navigate("/login");
         } else {
             await response.json();
             dispatch(loadCategories());
+            dispatch(showAndHideAlert("Post success", "New category made!", "alert"));
         }
     } catch (e) {
-        dispatch(showAndHideAlert("Give answer error", e.message, "error"));
+        dispatch(showAndHideAlert("Category error", e.message, "error"));
         console.error(e);
     }
 };
@@ -161,14 +184,15 @@ export const deleteCategory = (id) => async function (dispatch) {
         });
 
         if (response.status === 401) {
-            dispatch(showAndHideAlert("Login", "You need to login to post answers!", "alert"));
+            dispatch(showAndHideAlert("Delete failed", "You need to be a admin to delete category!", "error"));
             await navigate("/login");
         } else {
             await response.json();
             dispatch(loadCategories());
+            dispatch(showAndHideAlert("Delete success", "The category was deleted!", "alert"));
         }
     } catch (e) {
-        dispatch(showAndHideAlert("Give answer error", e.message, "error"));
+        dispatch(showAndHideAlert("Category error", e.message, "error"));
         console.error(e);
     }
 };
