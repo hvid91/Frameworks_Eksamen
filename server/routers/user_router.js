@@ -20,6 +20,15 @@ module.exports = (dal, secret) => {
             return;
         }
 
+        const exist = await dal.getUser(username);
+
+        if(exist){
+            let msg = "email!";
+            console.error(msg);
+            res.status(401).json({msg: msg});
+            return;
+        }
+
         const user = { "username": username, "password": password, "admin": admin};
         bcrypt.hash(user.password, 10, async (err, hash) => {
             user.hash = hash; // The hash has been made, and is stored on the user object.
@@ -27,6 +36,7 @@ module.exports = (dal, secret) => {
             const newUser = await dal.createUser(user);
             res.json({msg: "New user created!", username: newUser.username});
         });
+
     });
 
     router.put('/', (req, res) => {

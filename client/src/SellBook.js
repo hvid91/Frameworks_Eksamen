@@ -21,6 +21,7 @@ export default class SellBook extends Component {
     async componentDidMount() {
         await this.props.loggedInUser();
 
+        //Navigate user if they not logged in and have no rights to be here.
         if(!this.props.loggedIn){
             navigate("/login")
         }

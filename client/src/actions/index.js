@@ -79,14 +79,20 @@ export const creatUser = (username, password, admin) => async function (dispatch
         });
         const data = await response.json();
 
-        dispatch(showAndHideAlert("User created", data.msg, "alert"));
-        navigate("/"); // Front page
+        if(data.msg === "The user already exists!"){
+            dispatch(showAndHideAlert("User not created", data.msg, "error"));
+        }
+        else{
+            dispatch(showAndHideAlert("User created", data.msg, "alert"));
+            navigate("/"); // Front page
+        }
     }
     catch (error) {
         dispatch(showAndHideAlert("Login failed", error.message, "error"));
     }
 };
 
+    //The is used to fix the deleting of redux state when refresh(F5).
 export const loggedInUser = _ => async function (dispatch) {
     if (Auth.getToken()) {
         dispatch(addUserCredentials(Auth.getUsername(), Auth.getAdmin() === "true"));
@@ -116,12 +122,12 @@ export const loadCategories = _ => async function (dispatch) {
 
 export const postBook = (title, author, categoryID, price, sellerName, sellerEmail) => async function (dispatch) {
     const reg = RegExp(/^[ÆØÅæøåA-Za-z0-9._%+-]+@(?:[ÆØÅæøåA-Za-z0-9-]+.)+[A-Za-z]{2,6}$/);
-    if(!reg.test(sellerEmail)){
-        dispatch(showAndHideAlert("Email not valid", "Type in new email", "error"));
-        return;
-    }
     if (title === "" || author === "" || categoryID === "" || price <= 0 || sellerName === "" || sellerEmail === "") {
         dispatch(showAndHideAlert("Empty fields", "You need to put data in all fields", "error"));
+        return;
+    }
+    if(!reg.test(sellerEmail)){
+        dispatch(showAndHideAlert("Email not valid", "Type in new email", "error"));
         return;
     }
     try {
