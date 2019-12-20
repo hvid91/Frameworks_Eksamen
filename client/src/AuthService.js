@@ -2,7 +2,10 @@
  * Service class for authenticating users against an API
  * and storing JSON Web Tokens in the browser's LocalStorage.
  */
+const jwtDecode = require('jwt-decode');
+
 class AuthService {
+
     TOKEN_KEY = "token";
 
     constructor(auth_api_url) {
@@ -23,7 +26,6 @@ class AuthService {
         }
         this.setToken(json.token);
         this.setUsername(username);
-        this.setAdmin(json.admin);
         return json;
     }
 
@@ -36,6 +38,10 @@ class AuthService {
         }
          */
         return (this.getToken() !== null);
+    }
+
+    decodeToken(){
+        return jwtDecode(this.getToken());
     }
 
     setToken(token, username) {
@@ -51,14 +57,6 @@ class AuthService {
         return localStorage.getItem("username");
     }
 
-    setAdmin(admin) {
-        localStorage.setItem("admin", admin);
-    }
-
-    getAdmin() {
-        return localStorage.getItem("admin");
-    }
-
     getToken() {
         return localStorage.getItem(this.TOKEN_KEY);
     }
@@ -66,7 +64,6 @@ class AuthService {
     logout() {
         localStorage.removeItem(this.TOKEN_KEY);
         localStorage.removeItem("username");
-        localStorage.removeItem("admin");
     }
 
     fetch(url, options) {

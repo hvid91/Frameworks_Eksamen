@@ -96,7 +96,8 @@ export const creatUser = (username, password, admin) => async function (dispatch
     //The is used to fix the deleting of redux state when refresh(F5).
 export const loggedInUser = _ => async function (dispatch) {
     if (Auth.getToken()) {
-        dispatch(addUserCredentials(Auth.getUsername(), Auth.getAdmin() === "true"));
+        const data = Auth.decodeToken();
+        dispatch(addUserCredentials(data.username, data.admin));
     }
 };
 
