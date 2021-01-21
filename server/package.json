@@ -16,7 +16,7 @@
     "jest": "^24.9.0",
     "mongoose": "^5.7.10",
     "morgan": "^1.9.1",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.4.0",
     "supertest": "^4.0.2"
   },
   "description": "Small template for developing a MERN API using express.js",
